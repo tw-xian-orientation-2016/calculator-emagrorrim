@@ -10,7 +10,7 @@ $(document).ready(function() {
 function init() {
   service = new Service();
   displayNumber = '0';
-  updateDisplayer(displayNumber);
+    $('#displayer').val(displayNumber);
   expression = {
     number1:'',
     number2:'',
@@ -29,30 +29,29 @@ function setupBtnAction() {
 
 function setClearBtnAction() {
   $('#clearBtn').click(function() {
-    if ($('#displayer').val() === '0') {
+    if (expression.number1 && expression.op && displayNumber !== '0') {
+      displayNumber = '0';
+      $('#displayer').val(displayNumber);
+    } else {
       clearExpression();
-      $(this).html('AC');
-    } 
-    updateDisplayer('0');
+      displayNumber = '0';
+      $('#displayer').val(displayNumber);
+    }
   });
 }
 
 function setDisplayerChange() {
   $('#displayer').change(function() {
     if ($(this).val() === '') {
-      updateDisplayer('0');
-    }
-    if ($(this).val() === '0') {
-      $('#clearBtn').html('AC');
-    } else if(expression.number1 !== '') {
-      $('#clearBtn').html('C');
+      displayNumber = '0';
+      $('#displayer').val(displayNumber);
     }
   });
 }
 
 function setNumberBtnAction() {
   $('button[name="numberBtn"]').click(function() {
-    if (displayNumber === '0') {
+    if (displayNumber === '0' && $(this).html() !== '.') {
       displayNumber = '';
     }
     displayNumber += $(this).html();
@@ -62,14 +61,20 @@ function setNumberBtnAction() {
 
 function setNegativeBtnAction() {
   $('#negativeBtn').click(function() {
-    service.getNegative($('#displayer').val(), updateDisplayer);
+    if (displayNumber === '0') {
+      $('#displayer').val(displayNumber);
+    }
+    service.getNegative($('#displayer').val(), function(result) {
+      displayNumber = result;
+      $('#displayer').val(displayNumber);
+    });
   });
 }
 
 function setPercentageBtnAction() {
   $('#percentageBtn').click(function() {
     service.getPercentage($('#displayer').val(), function(result) {
-      updateDisplayer(result);
+      $('#displayer').val(result);
       displayNumber = '0';
     });
   });
@@ -77,7 +82,7 @@ function setPercentageBtnAction() {
 
 function setOperatorBtnAction() {
   $('button[name="operaterBtn"]').click(function() {
-    if (expression.number1 === '') {
+    if (expression.number1 === '' && $(this).html() !== '=') {
       expression.number1 = $('#displayer').val();
       expression.op = $(this).html(); 
       displayNumber = '0';
@@ -88,21 +93,16 @@ function setOperatorBtnAction() {
     } else {
       expression.number2 = $('#displayer').val();
       service.getResult($(this).html(), expression, function(result, executeOp) {
-        updateDisplayer(result);
+        $('#displayer').val(result);
         clearExpression();
-        expression.number1 = result;
         displayNumber = '0';
         if (executeOp !== '=') {
           expression.op = executeOp; 
+          expression.number1 = result;
         }
       });
     }
   });
-}
-
-function updateDisplayer(number) {
-  displayNumber = number;
-  $('#displayer').val(displayNumber);
 }
 
 function clearExpression() {
