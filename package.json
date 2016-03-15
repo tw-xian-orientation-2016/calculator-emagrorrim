@@ -4,7 +4,9 @@
   "description": "calculator",
   "main": "app.js",
   "dependencies": {
-    "express": "^4.13.4"
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "path": "^0.12.7"
   },
   "devDependencies": {
     "supertest": "^1.2.0"
