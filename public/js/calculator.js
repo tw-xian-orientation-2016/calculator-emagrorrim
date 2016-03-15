@@ -1,5 +1,6 @@
 var service;
 var displayNumber;
+var expression;
 
 $(document).ready(function() {
   init();
@@ -9,21 +10,42 @@ $(document).ready(function() {
 function init() {
   service = new Service();
   displayNumber = '0';
-  updateDisplayer('0');
+  updateDisplayer(displayNumber);
+  expression = {
+    number1:'',
+    number2:'',
+    op:'',
+  }
 }
 
 function setupBtnAction() {
   setDisplayerChange();
+  setClearBtnAction();
   setNumberBtnAction();
   setNegativeBtnAction();
   setPercentageBtnAction();
-  setAddBtnAction();
+  setOperatorBtnAction();
+}
+
+function setClearBtnAction() {
+  $('#clearBtn').click(function() {
+    if ($('#displayer').val() === '0') {
+      clearExpression();
+      $(this).html('AC');
+    } 
+    updateDisplayer('0');
+  });
 }
 
 function setDisplayerChange() {
   $('#displayer').change(function() {
     if ($(this).val() === '') {
-      $(this).val('0');
+      updateDisplayer('0');
+    }
+    if ($(this).val() === '0') {
+      $('#clearBtn').html('AC');
+    } else if(expression.number1 !== '') {
+      $('#clearBtn').html('C');
     }
   });
 }
@@ -46,14 +68,47 @@ function setNegativeBtnAction() {
 
 function setPercentageBtnAction() {
   $('#percentageBtn').click(function() {
-    service.getPercentage($('#displayer').val(), function(number) {
-      updateDisplayer(number);
+    service.getPercentage($('#displayer').val(), function(result) {
+      updateDisplayer(result);
       displayNumber = '0';
     });
+  });
+}
+
+function setOperatorBtnAction() {
+  $('button[name="operaterBtn"]').click(function() {
+    if (expression.number1 === '') {
+      expression.number1 = $('#displayer').val();
+      expression.op = $(this).html(); 
+      displayNumber = '0';
+    } else if(expression.op === '' && $(this).html() !== '=') {
+      expression.number2 = $('#displayer').val();
+      expression.op = $(this).html();
+      displayNumber = '0';
+    } else {
+      expression.number2 = $('#displayer').val();
+      service.getResult($(this).html(), expression, function(result, executeOp) {
+        updateDisplayer(result);
+        clearExpression();
+        expression.number1 = result;
+        displayNumber = '0';
+        if (executeOp !== '=') {
+          expression.op = executeOp; 
+        }
+      });
+    }
   });
 }
 
 function updateDisplayer(number) {
   displayNumber = number;
   $('#displayer').val(displayNumber);
+}
+
+function clearExpression() {
+  expression = {
+    number1:'',
+    number2:'',
+    op:'',
+  }
 }
