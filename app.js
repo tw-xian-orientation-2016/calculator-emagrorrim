@@ -12,9 +12,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', api);
 
 app.get('/', (req, res) => {
-  res.sendfile('./public/html/calculator.html');
+  res.sendfile(__dirname + '/public/html/calculator.html');
 });
 
 app.listen(8080, () => {
-  console.log('Example app listening on port 8080!');
+  console.log('App listening on port 8080!');
 });
