@@ -1,0 +1,27 @@
+{
+  "name": "calculator-emagrorrim",
+  "version": "1.0.0",
+  "description": "calculator",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "supertest": "^1.2.0"
+  },
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emagrorrim/calculator-emagrorrim.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/emagrorrim/calculator-emagrorrim/issues"
+  },
+  "homepage": "https://github.com/emagrorrim/calculator-emagrorrim#readme"
+}

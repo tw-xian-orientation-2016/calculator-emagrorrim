@@ -1,0 +1,18 @@
+.btn {
+  height: 70px;
+  border-radius: 0px;
+  border: 0.5px solid black;
+}
+
+.form-control {
+  border-radius: 0px;
+  background-color: black;
+  color: white;
+  font-size: 40px;
+  height: 130px;
+  text-align: right;
+}
+
+header {
+  height: 50px;
+}
